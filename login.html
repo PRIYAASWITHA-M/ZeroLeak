@@ -1,0 +1,1492 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroLeak | DevSecOps Security</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#020817;
+    color:white;
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+    radial-gradient(circle at 20% 50%,#063b70,transparent 35%),
+    radial-gradient(circle at 80% 50%,#26065c,transparent 40%),
+    linear-gradient(120deg,#020817,#06152f,#020817);
+    background-size:200% 200%;
+    animation:backgroundMove 15s ease infinite;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    opacity:.2;
+    background-image:
+    linear-gradient(#0a4164 1px,transparent 1px),
+    linear-gradient(90deg,#0a4164 1px,transparent 1px);
+    background-size:60px 60px;
+}
+
+@keyframes backgroundMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+/* Header */
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 5%;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo-icon{
+    font-size:48px;
+    color:#00eaff;
+    filter:drop-shadow(0 0 12px #00eaff);
+    animation:logoGlow 3s ease-in-out infinite;
+}
+
+.logo h1{
+    font-size:36px;
+}
+
+.logo h1 span,
+.dashboard-brand span,
+.card-logo h2 span{
+    color:#00eaff;
+}
+
+.logo p{
+    color:#94b5d6;
+    font-size:14px;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+nav a{
+    color:#a5c5e5;
+    text-decoration:none;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#00eaff;
+    text-shadow:0 0 12px #00eaff;
+}
+
+.status{
+    color:#00eaff;
+    font-size:14px;
+}
+
+/* Main Layout */
+
+.container{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    align-items:center;
+    gap:25px;
+    padding:45px 5%;
+    min-height:78vh;
+}
+
+/* Left Section */
+
+.left h2{
+    font-size:55px;
+    line-height:1.1;
+    margin-bottom:25px;
+}
+
+.left h2 span{
+    color:#00d9ff;
+    text-shadow:0 0 20px #008cff;
+}
+
+.left>p{
+    color:#a5c4e3;
+    line-height:1.8;
+    font-size:15px;
+    margin-bottom:28px;
+}
+
+.feature{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin:23px 0;
+}
+
+.feature-icon{
+    width:50px;
+    height:50px;
+    flex-shrink:0;
+    display:grid;
+    place-items:center;
+    border:1px solid #00cfff;
+    border-radius:50%;
+    color:#00eaff;
+    font-size:23px;
+    box-shadow:0 0 18px #00bfff55;
+    animation:iconGlow 4s ease-in-out infinite;
+}
+
+.feature h3{
+    color:#d2edff;
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.feature p{
+    color:#82a4c7;
+    font-size:13px;
+}
+
+.security-text{
+    color:#159fd1;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-top:45px;
+}
+
+/* Center Visual */
+
+.center-visual{
+    height:530px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+.human{
+    position:absolute;
+    right:5px;
+    top:50%;
+    transform:translateY(-50%);
+    opacity:.55;
+    filter:drop-shadow(0 0 25px #006eff);
+    animation:humanGlow 5s ease-in-out infinite;
+}
+
+.human-head{
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    background:linear-gradient(145deg,#172f56,#020817);
+    border:2px solid #235f9c;
+    margin:auto;
+}
+
+.human-body{
+    width:190px;
+    height:260px;
+    margin-top:-8px;
+    border-radius:95px 95px 20px 20px;
+    background:linear-gradient(145deg,#173b68,#020817 75%);
+    border:2px solid #1c4e83;
+}
+
+.lock-area{
+    position:relative;
+    z-index:2;
+    width:330px;
+    height:390px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.lock-ring{
+    position:absolute;
+    width:310px;
+    height:310px;
+    border-radius:50%;
+    border:1px solid #008cff;
+    box-shadow:0 0 20px #007bff,inset 0 0 30px #004dff44;
+    animation:ringPulse 5s ease-in-out infinite;
+}
+
+.lock-ring::before{
+    content:"";
+    position:absolute;
+    inset:25px;
+    border-radius:50%;
+    border:1px dashed #00eaff;
+    animation:rotateRing 25s linear infinite;
+}
+
+.lock-ring::after{
+    content:"";
+    position:absolute;
+    inset:55px;
+    border-radius:50%;
+    border:1px solid #9d4dff;
+    box-shadow:0 0 30px #743cff;
+    animation:ringPulse 3s ease-in-out infinite reverse;
+}
+
+.shield{
+    position:relative;
+    width:220px;
+    height:265px;
+    background:linear-gradient(145deg,#123c71,#03132d 65%);
+    clip-path:polygon(50% 0%,95% 18%,88% 65%,50% 100%,12% 65%,5% 18%);
+    border:2px solid #00d9ff;
+    filter:drop-shadow(0 0 12px #00cfff) drop-shadow(0 0 30px #005eff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    animation:shieldPulse 4s ease-in-out infinite;
+}
+
+.shield-inner{
+    position:absolute;
+    width:190px;
+    height:235px;
+    background:linear-gradient(145deg,#092b54,#020817);
+    clip-path:polygon(50% 0%,95% 18%,88% 65%,50% 100%,12% 65%,5% 18%);
+}
+
+.lock-icon{
+    position:relative;
+    z-index:5;
+    width:105px;
+    height:90px;
+    border:7px solid #00eaff;
+    border-radius:15px;
+    background:#0876a9;
+    box-shadow:0 0 15px #00eaff,0 0 45px #007bff,inset 0 0 20px #00cfff;
+    animation:lockPulse 3s ease-in-out infinite;
+}
+
+.lock-icon::before{
+    content:"";
+    position:absolute;
+    width:55px;
+    height:65px;
+    border:8px solid #00eaff;
+    border-bottom:none;
+    border-radius:35px 35px 0 0;
+    top:-60px;
+    left:18px;
+    filter:drop-shadow(0 0 8px #00eaff);
+}
+
+.lock-icon::after{
+    content:"●";
+    position:absolute;
+    color:#021c39;
+    font-size:30px;
+    left:30px;
+    top:15px;
+}
+
+/* Login Card */
+
+.login-card{
+    width:100%;
+    max-width:450px;
+    padding:30px;
+    border:1px solid #00c8ff;
+    border-radius:22px;
+    background:rgba(3,18,43,.9);
+    box-shadow:0 0 25px #006eff44,inset 0 0 30px #001c3d;
+    backdrop-filter:blur(20px);
+    animation:cardGlow 6s ease-in-out infinite;
+}
+
+.card-logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.mini-shield{
+    font-size:42px;
+    filter:drop-shadow(0 0 12px #00eaff);
+}
+
+.card-logo h2{
+    font-size:30px;
+}
+
+.card-logo p{
+    color:#6ba9dc;
+    font-size:11px;
+    letter-spacing:2px;
+    margin-top:8px;
+}
+
+/* Tabs */
+
+.tabs{
+    display:flex;
+    background:#081a37;
+    border:1px solid #203e69;
+    border-radius:13px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.tab{
+    width:50%;
+    padding:15px;
+    color:#9eb9dc;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.tab.active{
+    color:#00eaff;
+    background:linear-gradient(90deg,#063e59,#1d174c);
+    border:1px solid #00d9ff;
+    border-radius:12px;
+}
+
+/* Forms */
+
+.form-title{
+    font-size:27px;
+    margin-bottom:8px;
+}
+
+.form-subtitle{
+    color:#7fadd6;
+    font-size:14px;
+    margin-bottom:22px;
+}
+
+.input-box{
+    margin-bottom:17px;
+}
+
+.input-box input{
+    width:100%;
+    padding:16px;
+    border:1px solid #26518a;
+    border-radius:12px;
+    background:#04132c;
+    color:white;
+    outline:none;
+    font-size:14px;
+}
+
+.input-box input:focus{
+    border-color:#00eaff;
+    box-shadow:0 0 15px #00c8ff55;
+}
+
+.options{
+    display:flex;
+    justify-content:space-between;
+    color:#9db9d8;
+    font-size:12px;
+    margin:10px 0 23px;
+}
+
+.options a{
+    color:#00eaff;
+    text-decoration:none;
+}
+
+/* Buttons */
+
+.main-btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(90deg,#00d9e9,#a45aff);
+    color:#04132c;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+    transition:.3s;
+    box-shadow:0 0 12px #00cfff33;
+}
+
+.main-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 0 30px #00d9ff99;
+}
+
+.divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:22px 0;
+    color:#7f9fbe;
+    font-size:13px;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    height:1px;
+    background:#24466e;
+    flex:1;
+}
+
+.google-btn{
+    width:100%;
+    padding:14px;
+    border:1px solid #00bfff;
+    border-radius:12px;
+    color:white;
+    background:transparent;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.google-btn:hover{
+    background:#092b4b;
+    box-shadow:0 0 15px #00bfff44;
+}
+
+.register-text{
+    text-align:center;
+    color:#7f9fbe;
+    margin-top:22px;
+    font-size:13px;
+}
+
+.register-text span{
+    color:#00eaff;
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* Loading Screen */
+
+.loading-page{
+    display:none;
+    min-height:100vh;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:30px;
+}
+
+.loading-logo{
+    font-size:90px;
+    animation:loadingPulse 1s infinite;
+    filter:drop-shadow(0 0 25px #00eaff);
+}
+
+.loading-page h2{
+    color:#00eaff;
+    font-size:32px;
+    margin:20px 0 10px;
+}
+
+.loading-page p{
+    color:#8bb8df;
+}
+
+.loading-bar{
+    width:min(360px,90vw);
+    height:8px;
+    background:#102743;
+    border:1px solid #1f5782;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:28px;
+}
+
+.loading-bar span{
+    display:block;
+    width:40%;
+    height:100%;
+    background:linear-gradient(90deg,#00eaff,#a45aff);
+    animation:loadingBar 1.4s linear infinite;
+}
+
+/* Dashboard */
+
+.dashboard{
+    display:none;
+    min-height:100vh;
+    padding:28px 5%;
+}
+
+.dashboard-nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-bottom:25px;
+    border-bottom:1px solid #173b62;
+}
+
+.dashboard-brand{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.dashboard-brand small{
+    display:block;
+    color:#789dc5;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-top:6px;
+}
+
+.logout-btn{
+    padding:12px 20px;
+    border:1px solid #00cfff;
+    border-radius:10px;
+    color:#00eaff;
+    background:#061b36;
+    cursor:pointer;
+}
+
+.dashboard-content{
+    max-width:1200px;
+    margin:45px auto;
+}
+
+.dashboard-content h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.dashboard-subtitle{
+    color:#8fb5d9;
+    margin-bottom:30px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    margin-bottom:30px;
+}
+
+.dash-card{
+    padding:25px;
+    border:1px solid #164d79;
+    border-radius:18px;
+    background:rgba(3,18,43,.85);
+}
+
+.dash-card span{
+    font-size:30px;
+}
+
+.dash-card h3{
+    margin:15px 0 8px;
+    color:#cceaff;
+}
+
+.dash-card strong{
+    color:#00eaff;
+    font-size:22px;
+}
+
+.dash-card p{
+    color:#83a9ce;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.scanner{
+    padding:28px;
+    border:1px solid #00c8ff;
+    border-radius:20px;
+    background:rgba(3,18,43,.9);
+}
+
+.scanner h2{
+    color:#00eaff;
+    margin-bottom:10px;
+}
+
+.scanner p{
+    color:#8fb5d9;
+    margin-bottom:18px;
+}
+
+#codeInput{
+    width:100%;
+    min-height:220px;
+    resize:vertical;
+    padding:18px;
+    border:1px solid #26518a;
+    border-radius:12px;
+    background:#04132c;
+    color:#d9f4ff;
+    font:14px Consolas,monospace;
+}
+
+.scan-btn{
+    margin-top:18px;
+}
+
+.scan-result{
+    margin-top:20px;
+    padding:16px;
+    border-radius:12px;
+    background:#071b32;
+    border:1px solid #26518a;
+    color:#9fbddd;
+    line-height:1.6;
+}
+
+.scan-result.safe{
+    color:#5cffb1;
+    border-color:#1c9d69;
+}
+
+.scan-result.danger{
+    color:#ff9eaa;
+    border-color:#b93651;
+}
+
+/* Animations */
+
+@keyframes logoGlow{
+    0%,100%{filter:drop-shadow(0 0 8px #00eaff)}
+    50%{filter:drop-shadow(0 0 25px #00eaff)}
+}
+
+@keyframes iconGlow{
+    0%,100%{box-shadow:0 0 8px #00bfff44}
+    50%{box-shadow:0 0 25px #00bfff}
+}
+
+@keyframes humanGlow{
+    0%,100%{opacity:.3}
+    50%{opacity:.7}
+}
+
+@keyframes ringPulse{
+    0%,100%{transform:scale(.95);opacity:.5}
+    50%{transform:scale(1.08);opacity:1}
+}
+
+@keyframes rotateRing{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+@keyframes shieldPulse{
+    0%,100%{
+        filter:drop-shadow(0 0 10px #00cfff)
+        drop-shadow(0 0 20px #005eff);
+    }
+    50%{
+        filter:drop-shadow(0 0 25px #00eaff)
+        drop-shadow(0 0 55px #005eff);
+    }
+}
+
+@keyframes lockPulse{
+    0%,100%{
+        box-shadow:0 0 12px #00eaff,0 0 25px #007bff;
+    }
+    50%{
+        box-shadow:0 0 30px #00eaff,0 0 70px #007bff,0 0 100px #743cff;
+    }
+}
+
+@keyframes cardGlow{
+    0%,100%{
+        box-shadow:0 0 20px #006eff33,inset 0 0 25px #001c3d;
+    }
+    50%{
+        box-shadow:0 0 40px #006eff77,0 0 70px #4216a833,inset 0 0 35px #001c3d;
+    }
+}
+
+@keyframes loadingPulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.15)}
+}
+
+@keyframes loadingBar{
+    from{transform:translateX(-150%)}
+    to{transform:translateX(350%)}
+}
+
+/* Responsive */
+
+@media(max-width:1250px){
+    .container{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .center-visual{
+        display:none;
+    }
+
+    .login-card{
+        justify-self:center;
+    }
+}
+
+@media(max-width:800px){
+    header{
+        padding:20px;
+    }
+
+    nav{
+        display:none;
+    }
+
+    .container{
+        grid-template-columns:1fr;
+        padding:35px 20px;
+    }
+
+    .left{
+        text-align:center;
+    }
+
+    .left h2{
+        font-size:43px;
+    }
+
+    .feature{
+        justify-content:center;
+        text-align:left;
+    }
+
+    .login-card{
+        max-width:500px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .dashboard{
+        padding:22px 20px;
+    }
+
+    .dashboard-content h1{
+        font-size:32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+
+<header id="mainHeader">
+
+    <div class="logo">
+
+        <div class="logo-icon">🛡️</div>
+
+        <div>
+            <h1>Zero<span>Leak</span></h1>
+            <p>Detect Secrets. Protect Your Code.</p>
+        </div>
+
+    </div>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <span class="status">🛡 Secure • Fast • Reliable</span>
+    </nav>
+
+</header>
+
+<!-- Main Page -->
+
+<main class="container" id="landingContainer">
+
+    <!-- Left Section -->
+
+    <section class="left">
+
+        <h2>
+            Secure<br>
+            <span>Your Code _</span>
+        </h2>
+
+        <p>
+            ZeroLeak scans your source code for exposed API keys,
+            passwords, tokens and credentials before they reach production.
+        </p>
+
+        <div class="feature">
+
+            <div class="feature-icon">✓</div>
+
+            <div>
+                <h3>Detect Secrets</h3>
+                <p>Find exposed credentials instantly</p>
+            </div>
+
+        </div>
+
+        <div class="feature">
+
+            <div class="feature-icon">⚡</div>
+
+            <div>
+                <h3>Prevent Breaches</h3>
+                <p>Keep your code and data safe</p>
+            </div>
+
+        </div>
+
+        <div class="feature">
+
+            <div class="feature-icon">∞</div>
+
+            <div>
+                <h3>Build with Confidence</h3>
+                <p>Secure your DevOps pipeline</p>
+            </div>
+
+        </div>
+
+        <p class="security-text">
+            &lt; SECURITY IS NOT AN OPTION /&gt;
+        </p>
+
+    </section>
+
+    <!-- Center Section -->
+
+    <section class="center-visual">
+
+        <div class="human">
+
+            <div class="human-head"></div>
+            <div class="human-body"></div>
+
+        </div>
+
+        <div class="lock-area">
+
+            <div class="lock-ring"></div>
+
+            <div class="shield">
+
+                <div class="shield-inner"></div>
+
+                <div class="lock-icon"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Login Section -->
+
+    <section class="login-card">
+
+        <div class="card-logo">
+
+            <div class="mini-shield">🛡️</div>
+
+            <h2>Zero<span>Leak</span></h2>
+
+            <p>DEVSECOPS SECURITY PLATFORM</p>
+
+        </div>
+
+        <div class="tabs">
+
+            <button class="tab active"
+                    id="loginTab"
+                    onclick="showLogin()">
+                👤 Login
+            </button>
+
+            <button class="tab"
+                    id="registerTab"
+                    onclick="showRegister()">
+                👥 Register
+            </button>
+
+        </div>
+
+        <!-- Login Form -->
+
+        <div id="loginForm">
+
+            <h2 class="form-title">Welcome Back</h2>
+
+            <p class="form-subtitle">
+                Login to access your secure dashboard
+            </p>
+
+            <div class="input-box">
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="✉ Email Address"
+                >
+
+            </div>
+
+            <div class="input-box">
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="🔒 Password"
+                >
+
+            </div>
+
+            <div class="options">
+
+                <label>
+                    <input type="checkbox">
+                    Remember me
+                </label>
+
+                <a href="#">Forgot password?</a>
+
+            </div>
+
+            <button class="main-btn" onclick="loginUser()">
+                👤 Login →
+            </button>
+
+            <div class="divider">OR</div>
+
+            <button class="google-btn" onclick="googleLogin()">
+                🌈 Continue with Google
+            </button>
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <span onclick="showRegister()">Register</span>
+
+            </p>
+
+        </div>
+
+        <!-- Register Form -->
+
+        <div id="registerForm" class="hidden">
+
+            <h2 class="form-title">Create Account</h2>
+
+            <p class="form-subtitle">
+                Join the ZeroLeak security platform
+            </p>
+
+            <div class="input-box">
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="👤 Full Name"
+                >
+
+            </div>
+
+            <div class="input-box">
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="✉ Email Address"
+                >
+
+            </div>
+
+            <div class="input-box">
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="🔒 Create Password"
+                >
+
+            </div>
+
+            <button class="main-btn" onclick="registerUser()">
+                Create Account →
+            </button>
+
+            <p class="register-text">
+
+                Already have an account?
+
+                <span onclick="showLogin()">Login</span>
+
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- Loading Screen -->
+
+<section class="loading-page" id="loadingPage">
+
+    <!-- Changed from lock to ZeroLeak logo -->
+
+    <div class="loading-logo" id="loadingLogo">🛡️</div>
+
+    <h2>Access Granted</h2>
+
+    <p>
+        Initializing ZeroLeak Security Dashboard...
+    </p>
+
+    <div class="loading-bar">
+        <span></span>
+    </div>
+
+</section>
+
+<!-- DevOps Dashboard -->
+
+<section class="dashboard" id="dashboard">
+
+    <div class="dashboard-nav">
+
+        <div class="dashboard-brand">
+
+            🛡️ Zero<span>Leak</span>
+
+            <small>SECURITY DASHBOARD</small>
+
+        </div>
+
+        <button class="logout-btn" onclick="logoutUser()">
+            ↪ Logout
+        </button>
+
+    </div>
+
+    <div class="dashboard-content">
+
+        <h1>DevOps Security Dashboard</h1>
+
+        <p class="dashboard-subtitle">
+            Monitor your code security and scan secrets before deployment.
+        </p>
+
+        <div class="cards">
+
+            <div class="dash-card">
+
+                <span>🛡️</span>
+
+                <h3>Security Status</h3>
+
+                <strong>Protected</strong>
+
+                <p>ZeroLeak protection is active.</p>
+
+            </div>
+
+            <div class="dash-card">
+
+                <span>⚡</span>
+
+                <h3>Pipeline</h3>
+
+                <strong>Ready</strong>
+
+                <p>Security checks are available.</p>
+
+            </div>
+
+            <div class="dash-card">
+
+                <span>🔍</span>
+
+                <h3>Scanner</h3>
+
+                <strong>Online</strong>
+
+                <p>Scan source code for exposed secrets.</p>
+
+            </div>
+
+        </div>
+
+        <!-- Secret Scanner -->
+
+        <div class="scanner">
+
+            <h2>🔍 Secret Scanner</h2>
+
+            <p>
+                Paste your source code below to detect common exposed secrets.
+            </p>
+
+            <textarea
+                id="codeInput"
+                placeholder="Paste your code here..."
+            ></textarea>
+
+            <button class="main-btn scan-btn" onclick="scanCode()">
+                Scan Code →
+            </button>
+
+            <div id="scanResult" class="scan-result">
+                Scanner is ready.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+/* ==============================
+   ELEMENTS
+============================== */
+
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
+const landingContainer = document.getElementById("landingContainer");
+const header = document.getElementById("mainHeader");
+const loadingPage = document.getElementById("loadingPage");
+const loadingLogo = document.getElementById("loadingLogo");
+const dashboard = document.getElementById("dashboard");
+const scanResult = document.getElementById("scanResult");
+
+
+/* ==============================
+   SWITCH TO LOGIN
+============================== */
+
+function showLogin() {
+
+    loginForm.classList.remove("hidden");
+    registerForm.classList.add("hidden");
+
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+
+}
+
+
+/* ==============================
+   SWITCH TO REGISTER
+============================== */
+
+function showRegister() {
+
+    loginForm.classList.add("hidden");
+    registerForm.classList.remove("hidden");
+
+    loginTab.classList.remove("active");
+    registerTab.classList.add("active");
+
+}
+
+
+/* ==============================
+   LOGIN
+============================== */
+
+function loginUser() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    if (email === "" || password === "") {
+
+        alert("Please fill all fields!");
+        return;
+
+    }
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+
+        alert("Please enter a valid email address!");
+        return;
+
+    }
+
+    openDashboard();
+
+}
+
+
+/* ==============================
+   REGISTER
+============================== */
+
+function registerUser() {
+
+    const name =
+        document.getElementById("registerName").value.trim();
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    if (name === "" || email === "" || password === "") {
+
+        alert("Please fill all fields!");
+        return;
+
+    }
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+
+        alert("Please enter a valid email address!");
+        return;
+
+    }
+
+    if (password.length < 6) {
+
+        alert("Password must contain at least 6 characters!");
+        return;
+
+    }
+
+    alert("Registration successful! Please login.");
+
+    document.getElementById("loginEmail").value = email;
+
+    showLogin();
+
+}
+
+
+/* ==============================
+   GOOGLE LOGIN
+============================== */
+
+function googleLogin() {
+
+    alert("Google authentication will be connected using Firebase.");
+
+}
+
+
+/* ==============================
+   OPEN DASHBOARD
+============================== */
+
+function openDashboard() {
+
+    // Hide login page
+    landingContainer.style.display = "none";
+    header.style.display = "none";
+
+    // Show loading page
+    loadingPage.style.display = "flex";
+
+    // Redirect after 3 seconds
+    setTimeout(function () {
+        window.location.href = "/Devops1.html";
+    }, 3000);
+}
+
+/* ==============================
+   LOGOUT
+============================== */
+
+function logoutUser() {
+
+    if (dashboard) {
+        dashboard.style.display = "none";
+    }
+
+    if (loadingPage) {
+        loadingPage.style.display = "none";
+    }
+
+    if (landingContainer) {
+        landingContainer.style.display = "grid";
+    }
+
+    if (header) {
+        header.style.display = "flex";
+    }
+
+    document.getElementById("loginEmail").value = "";
+    document.getElementById("loginPassword").value = "";
+
+    const codeInput = document.getElementById("codeInput");
+
+    if (codeInput) {
+        codeInput.value = "";
+    }
+
+    if (scanResult) {
+
+        scanResult.className = "scan-result";
+        scanResult.textContent = "Scanner is ready.";
+
+    }
+
+    showLogin();
+
+}
+
+
+/* ==============================
+   SECRET SCANNER
+============================== */
+
+function scanCode() {
+
+    const code =
+        document.getElementById("codeInput").value;
+
+    if (code.trim() === "") {
+
+        scanResult.className = "scan-result danger";
+
+        scanResult.textContent =
+            "⚠️ Please paste some source code before scanning.";
+
+        return;
+
+    }
+
+    const patterns = [
+
+        {
+            name: "API Key",
+
+            regex:
+                /(api[-_]?key|apikey)\s*[:=]\s*["'`][^"'`]{8,}["'`]/i
+        },
+
+        {
+            name: "Password",
+
+            regex:
+                /(password|passwd|pwd)\s*[:=]\s*["'`][^"'`]+["'`]/i
+        },
+
+        {
+            name: "Secret",
+
+            regex:
+                /(secret|client_secret)\s*[:=]\s*["'`][^"'`]+["'`]/i
+        },
+
+        {
+            name: "Access Token",
+
+            regex:
+                /(access[-_]?token|auth[-_]?token|bearer)\s*[:=]\s*["'`][^"'`]+["'`]/i
+        },
+
+        {
+            name: "Private Key",
+
+            regex:
+                /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/i
+        }
+
+    ];
+
+
+    const found = patterns
+
+        .filter(item => item.regex.test(code))
+
+        .map(item => item.name);
+
+
+    if (found.length > 0) {
+
+        const uniqueFindings =
+            [...new Set(found)];
+
+        scanResult.className =
+            "scan-result danger";
+
+        scanResult.innerHTML =
+            "⚠️ <strong>Potential secrets detected:</strong><br>" +
+
+            uniqueFindings
+                .map(item => "• " + item)
+                .join("<br>") +
+
+            "<br><br>" +
+
+            "Remove sensitive values and use environment variables or a secret manager.";
+
+    }
+
+    else {
+
+        scanResult.className =
+            "scan-result safe";
+
+        scanResult.innerHTML =
+            "✅ No common secret patterns detected in this scan." +
+
+            "<br><small>This is a basic client-side check and cannot guarantee that code is fully secure.</small>";
+
+    }
+
+}
+
+</script>
+</body>
+</html>

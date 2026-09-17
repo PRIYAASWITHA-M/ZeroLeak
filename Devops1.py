@@ -1,49 +1,38 @@
+import os
 from flask import Flask, request, jsonify, send_from_directory
 from Scanner import scan_code
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
 
-# ==============================
-# HOME PAGE
-# ==============================
-
 @app.route("/")
 def home():
-    return send_from_directory(".", "Devops1.html")
+    return send_from_directory(BASE_DIR, "login.html")
 
 
-# ==============================
-# JAVASCRIPT FILE
-# ==============================
+@app.route("/Devops1.html")
+def dashboard():
+    return send_from_directory(BASE_DIR, "Devops1.html")
+
 
 @app.route("/Devops1.js")
 def javascript():
-    return send_from_directory(".", "Devops1.js")
+    return send_from_directory(BASE_DIR, "Devops1.js")
 
-
-# ==============================
-# CSS FILE
-# ==============================
 
 @app.route("/Devops1.css")
 def css():
-    return send_from_directory(".", "Devops1.css")
+    return send_from_directory(BASE_DIR, "Devops1.css")
 
-
-# ==============================
-# SECURITY SCAN API
-# ==============================
 
 @app.route("/scan", methods=["POST"])
 def scan():
-
-    data = request.get_json()
-
+    data = request.get_json(silent=True) or {}
     code = data.get("code", "")
 
     findings = scan_code(code)
-
     score = max(0, 100 - (len(findings) * 25))
 
     return jsonify({
@@ -54,9 +43,5 @@ def scan():
     })
 
 
-# ==============================
-# START SERVER
-# ==============================
-
 if __name__ == "__main__":
-   app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)

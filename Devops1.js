@@ -1,3 +1,4 @@
+
 console.log("ZeroLeak JavaScript Loaded");
 
 
@@ -24,15 +25,11 @@ fileInput.addEventListener("change", function () {
     const reader = new FileReader();
 
     reader.onload = function (event) {
-
         codeInput.value = event.target.result;
-
     };
 
     reader.onerror = function () {
-
         alert("Unable to read the selected file.");
-
     };
 
     reader.readAsText(file);
@@ -57,7 +54,9 @@ async function scanCode() {
 
     if (code.trim() === "") {
 
-        alert("Please paste some source code or upload a file first.");
+        alert(
+            "Please paste some source code or upload a file first."
+        );
 
         return;
     }
@@ -101,7 +100,9 @@ async function scanCode() {
         console.log("Scan Result:", result);
 
 
-        // Show results section
+        // ==========================================
+        // SHOW RESULTS
+        // ==========================================
 
         resultsSection.classList.remove("hidden");
 
@@ -109,7 +110,7 @@ async function scanCode() {
 
 
         // ==========================================
-        // DASHBOARD
+        // DASHBOARD UPDATE
         // ==========================================
 
         document.getElementById("filesScanned")
@@ -126,6 +127,16 @@ async function scanCode() {
 
         document.getElementById("resultScore")
             .textContent = result.score;
+
+
+        // ==========================================
+        // SHOW SECRET POPUP
+        // ==========================================
+
+        showSecretPopup(
+            result.count,
+            result.score
+        );
 
 
         // ==========================================
@@ -243,6 +254,77 @@ async function scanCode() {
 
 
 // ==========================================
+// SECRET POPUP
+// ==========================================
+
+function showSecretPopup(count, score) {
+
+    const popup =
+        document.getElementById("secretPopup");
+
+    const popupIcon =
+        document.getElementById("popupIcon");
+
+    const popupTitle =
+        document.getElementById("popupTitle");
+
+    const popupMessage =
+        document.getElementById("popupMessage");
+
+
+    if (count > 0) {
+
+        popupIcon.textContent = "⚠️";
+
+        popupTitle.textContent =
+            "Secrets Detected!";
+
+
+        popupMessage.textContent =
+            count +
+            " potential secret(s) found in your code. " +
+            "Security Score: " +
+            score +
+            "/100";
+
+
+    } else {
+
+        popupIcon.textContent = "✅";
+
+        popupTitle.textContent =
+            "Code Looks Safe!";
+
+
+        popupMessage.textContent =
+            "No common secrets detected. " +
+            "Security Score: " +
+            score +
+            "/100";
+
+    }
+
+
+    popup.classList.add("show");
+
+}
+
+
+// ==========================================
+// CLOSE POPUP
+// ==========================================
+
+function closeSecretPopup() {
+
+    const popup =
+        document.getElementById("secretPopup");
+
+    popup.classList.remove("show");
+
+}
+
+
+// ==========================================
 // CLEAR
 // ==========================================
 
@@ -252,7 +334,8 @@ function clearCode() {
 
     fileInput.value = "";
 
-    selectedFile.textContent = "No file selected";
+    selectedFile.textContent =
+        "No file selected";
 
 
     document.getElementById("resultsSection")
@@ -281,5 +364,10 @@ function clearCode() {
 
     document.getElementById("findingsContainer")
         .innerHTML = "";
+
+
+    // Close popup if open
+
+    closeSecretPopup();
 
 }
